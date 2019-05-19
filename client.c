@@ -11,6 +11,8 @@
 #include <arpa/inet.h>
 #include <string.h>
 
+#include "wrap.h"
+
 #define SERV_PORT 8888
 #define SERV_IP "127.0.0.1"
 
@@ -20,7 +22,7 @@ int main()
 	char buf [BUFSIZ];
 
 	//创建socket
-	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	int sockfd = my_socket(AF_INET, SOCK_STREAM, 0);
 
 	// 创建结构体 sockaddr_in 保存服务器的 iP 和 port
 	struct sockaddr_in server_sock;
@@ -33,7 +35,7 @@ int main()
 	inet_pton(AF_INET, SERV_IP, &server_sock.sin_addr.s_addr);
 
 	// 和服务器端进行连接通信
-	connect(sockfd, (struct sockaddr*)&server_sock, sizeof(server_sock));
+	my_connect(sockfd, (struct sockaddr*)&server_sock, sizeof(server_sock));
 	
 	while(1)
 	{

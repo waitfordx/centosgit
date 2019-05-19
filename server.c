@@ -6,17 +6,19 @@
 #include <ctype.h>
 #include <string.h>
 
+#include "wrap.h"
+
 #define SERV_PORT 8888
 
 
 int main(){
 	// 创建一个 sockaddr_in 结构体存储数据
-	char buf[BUFSIZ];
+	char buf[BUFSIZ]; char clie_ip[BUFSIZ];
 	struct sockaddr_in server_sock;
 	struct sockaddr_in client_sock;  socklen_t addr_len;
 	
 	// 创建 socket
-	int lfd = socket(AF_INET, SOCK_STREAM, 0);
+	int lfd = my_socket(AF_INET, SOCK_STREAM, 0);
 	
 	// 初始化记录服务器信息的 sockaddr_in
 	
@@ -27,15 +29,20 @@ int main(){
 	server_sock.sin_addr.s_addr = htonl(INADDR_ANY);
 	
 	// 绑定 IP 和 port
-	bind(lfd, (struct sockaddr*)&server_sock, sizeof(server_sock));
+	my_bind(lfd, (struct sockaddr*)&server_sock, sizeof(server_sock));
 	
 	// 设置同时连接上限
 	listen(lfd, 10);
 	
 	// 创建真正用于接收数据的 socket, client_sock 用于返回接收到的客户端的信息
 	addr_len = sizeof(client_sock);
-	int sockfd = accept(lfd, (struct sockaddr*)&client_sock, &addr_len);
+	int sockfd = my_accept(lfd, (struct sockaddr*)&client_sock, &addr_len);
 	
+	// 添加提示信息：
+	printf("The client IP is : %s, PORT is %d\n",
+	inet_ntop(AF_INET, &client_sock.sin_addr.s_addr, clie_ip, sizeof(clie_ip) ),
+	ntohs(client_sock.sin_port));
+
 	// 处理与客户端的交互
 	while(1)
 	{
