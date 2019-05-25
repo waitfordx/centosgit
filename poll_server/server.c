@@ -38,7 +38,7 @@ int main(){
 	bzero(&serv_addr, sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(SERV_PORT);
-	serv_addr.sin_addr.s_addr = htons(INADDR_ANY);
+	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	// band  和 listen
 	my_bind(listen_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
@@ -83,7 +83,7 @@ int main(){
 		}
 
 		// 开始处理读事件响应了的客户端
-		for(int i = 0; i <= maxi; i++)
+		for(int i = 1; i <= maxi; i++)
 		{
 			int sockfd = client[i].fd;
 			if(sockfd < 0)
