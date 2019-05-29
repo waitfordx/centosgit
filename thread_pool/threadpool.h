@@ -8,7 +8,7 @@
 #ifndef __THREADPOOL_H
 #define __THREADPOOL_H
 
-typedef struct threadpool_t;
+typedef struct threadpool_t threadpool_t;
 
 threadpool_t *threadpool_create(int min_thr_num, int max_thr_num, int queue_max_size);
 
