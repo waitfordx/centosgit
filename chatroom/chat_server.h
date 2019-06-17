@@ -28,7 +28,7 @@ struct client{
 // 记录登录客户机的数量.需要改进重复利用下标。
 int num_client = 0;
 struct client my_client[100];
-int max_num;
+int max_num = -1;
 
 // 公共管道和服务器启动标志。公共管道用于读取请求
 int ser_fd;

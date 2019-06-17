@@ -155,11 +155,11 @@ void client_login(char* login_name){
 void send_message(MP *ms){
 	char* buf = (void*) ms;
 
-	for(int i = 0; i < max_num; i++)
+	for(int i = 0; i <= max_num; i++)
 	{
-		if(strcmp(my_client[i].client_name, ms->send_name) == 0)
+		if(strcmp(my_client[i].client_name, ms->recv_name) == 0)
 		{
-			write(my_client[i].fifo_fd, buf, sizeof(buf));
+			write(my_client[i].fifo_fd, buf, BUFSIZE);
 			break;
 		}
 	}
@@ -170,7 +170,7 @@ void send_message(MP *ms){
 
 // 客户端退出，维护队列。登录数减 1
 void client_quit(char* quit_name){
-	for(int i = 0; i < max_num; i++)
+	for(int i = 0; i <= max_num; i++)
 	{
 		if(strcmp(my_client[i].client_name, quit_name) == 0)
 		{
@@ -178,11 +178,11 @@ void client_quit(char* quit_name){
 			my_client[i].fifo_fd = -1;
 			my_client[i].client_name[0] = '\0';
 			my_client[i].status = 0;
+			num_client--;
 			break;
 		}
 	}
 
-	num_client--;
 	printf("%s has exited\n", quit_name);
 }
 

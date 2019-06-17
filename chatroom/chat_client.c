@@ -143,7 +143,7 @@ void send_to_client(char* recv_name, char* data){
 void recv_message(){
 	
 	char buf[BUFSIZE];
-	int len = read(cli_fd, buf, sizeof(buf));
+	int len = read(cli_fd, buf, sizeof(MP));
 
 	// 定义一个结构体指针，接收数据包 char* 类型
 	MP* mes = NULL;
