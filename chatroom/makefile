@@ -16,3 +16,4 @@ client: chat_client.o
 
 clean:
 	-rm -rf server client $(obj)
+	-rm -f /tmp/fifo

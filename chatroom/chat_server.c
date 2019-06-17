@@ -14,7 +14,7 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#include "chat.h"
+#include "chat_server.h"
 
 // 定义一个公共 FIFO 
 #define SERV_FIFO "/tmp/fifo"
@@ -25,6 +25,8 @@
 
 // 初始化，创建 公共 FIFO，非阻塞打开。设置 STDIN_FILENO 为非阻塞
 void init_server(){
+
+	umask(0);
 	int ret = mkfifo(SERV_FIFO, 0777);
 	if(ret < 0)
 	{
@@ -91,6 +93,7 @@ void client_login(char* login_name){
 		{
 			if(my_client[i].status == 0)
 			{
+				my_client[i].status = 1;
 				index = i;
 				break;
 			}
@@ -104,9 +107,21 @@ void client_login(char* login_name){
 		strcpy(my_client[index].client_name, login_name);
 		char path[25] = "/tmp/";
 		strcat(path, login_name);
+		printf(" path is %s\n", path);
 
-		mkfifo(path, 0777);
-		my_client[index].fifo_fd = open(path, O_WRONLY|O_NONBLOCK);
+		int ret = mkfifo(path, 0777);
+		if(ret < 0)
+		{
+			perror("create private fifo");
+			exit(1);
+		}
+		//	加上 O_NONBLOCK 导致读取错误
+		my_client[index].fifo_fd = open(path, O_WRONLY);
+		if(my_client[index].fifo_fd < 0)
+		{
+			perror("open private fifo ");
+			exit(1);
+		}
 		char buf[] = "Login succeful! lets begin talking!\n";
 		write(my_client[index].fifo_fd, buf, sizeof(buf));
 
