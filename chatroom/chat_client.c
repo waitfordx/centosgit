@@ -81,7 +81,8 @@ void send_to_server(int mesno){
 
 // 处理用户输入的数据，使数据格式化封装成包
 void message_handle(char* mes){
-	
+	int n = strlen(mes);
+	mes[n-1] = '\0';
 	if(strcmp(mes, "quit") == 0)
 	{
 		send_to_server(2);
@@ -130,7 +131,8 @@ void message_handle(char* mes){
 	while(mes[i] != '\0')
 		data[j++] = mes[i++];
 	
-	data[j] = '\0';
+	// 截断 mes 中换行符
+	data[j-1] = '\0';
 
 	send_to_client(recv_name, data);
 
