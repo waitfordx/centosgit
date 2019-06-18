@@ -34,7 +34,7 @@ void init_client(){
 // 登录服务器
 void login_server(){
 	
-	printf("please input client name \n");
+	printf("please input client name :\t");
 	scanf("%s", client_name);
 
 	ser_fd = open(SERV_FIFO, O_WRONLY|O_NONBLOCK);
@@ -59,7 +59,7 @@ void login_server(){
 		exit(1);
 	}
 
-	printf(" login succeful!\n");
+	//printf(" login succeful!\n");
 }
 
 
@@ -89,20 +89,35 @@ void message_handle(char* mes){
 		return ;
 	}
 
-	// 记录发送者姓名和数据 接收者姓名 : 内容
+	// 记录发送者姓名和数据 [接收者] 信息
 	char recv_name[20];
 	char data[1024];
 
 	int i = 0;
 	//	截断接收者姓名
-	while(mes[i] != '\0' && mes[i] != ':')
+	if(mes[0] == '[')
+	{
+		int j = 0;
+		i++;
+		while(mes[i] != ']')
+		{
+			recv_name[j] = mes[i];
+			i++;		
+			j++;
+		}
+		recv_name[j] = '\0';
+	}
+
+	/*
+	 * while(mes[i] != '[' && mes[i] != '')
 	{
 		recv_name[i] = mes[i];
 		i++;
 	}
 	recv_name[i] = '\0';
+	*/
 
-	if(mes[i] == ':')
+	if(mes[i] == ']')
 		i++;
 
 	else 
@@ -177,7 +192,8 @@ int main()
 
 	while(flags)
 	{
-		if(scanf("%s", mes) != EOF)
+		int n = read(STDIN_FILENO, mes, sizeof(mes));
+		if(n > 0)
 			message_handle(mes);
 		recv_message();
 	}

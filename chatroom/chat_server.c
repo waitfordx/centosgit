@@ -115,14 +115,14 @@ void client_login(char* login_name){
 			perror("create private fifo");
 			exit(1);
 		}
-		//	加上 O_NONBLOCK 导致读取错误
+		//	加上 O_NONBLOCK, 非阻塞模式会在客户端打开私有 FIFO 的读端之前就开始写数据。导致出错！！！
 		my_client[index].fifo_fd = open(path, O_WRONLY);
 		if(my_client[index].fifo_fd < 0)
 		{
 			perror("open private fifo ");
 			exit(1);
 		}
-		char buf[] = "Login succeful! lets begin talking!\n";
+		char buf[] = "Welcome! lets begin talking!\n";
 		write(my_client[index].fifo_fd, buf, sizeof(buf));
 
 		unlink(path);
@@ -211,7 +211,7 @@ void close_server(){
 void message_handle(char* ms){
 	if(strcmp(ms, "quit") == 0)
 		close_server();
-	else if(strcmp(ms, "number"))
+	else if(strcmp(ms, "number") == 0)
 		printf("current login is: %d\n", num_client);
 }
 
