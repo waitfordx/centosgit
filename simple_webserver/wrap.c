@@ -24,4 +24,6 @@ void send_error(char* err_num, char* err_discrible, char* err_content){
 	printf("<head><title>%s %s</title></head>\n", err_num, err_discrible);
 	printf("<body>%s</body>\n", err_content);
 	printf("</html>");
+
+	exit(1);
 }

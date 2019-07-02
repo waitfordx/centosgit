@@ -59,7 +59,23 @@ int main(int argc, char* argv[]){
 		send_error("404", "open error", "open dir error!");
 		
 // 发送协议头，并按二进制字节流方式读取文件。按文件属性分类：
-	send_header("text/plain");
+	char* dot = strrchr(file, '.');
+	char* type;
+
+	if(dot == NULL)
+			type = "text/plain";
+	else if(strcmp(dot, ".html") == 0)
+			type = "text/html";
+	else if(strcmp(dot, ".jpg") == 0)
+			type = "image/jpeg";
+	else if(strcmp(dot, ".mp3") == 0)
+			type = "audio/mpeg";
+	else 
+			type = "text/plain; charset=iso-8859-1";
+
+
+	send_header(type);
+
 	while((ich=getc(fp)) != EOF)
 		putchar(ich);
 	fflush(stdout);
